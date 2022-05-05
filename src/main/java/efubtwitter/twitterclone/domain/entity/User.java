@@ -27,4 +27,10 @@ public class User {
         this.name = name;
         this.readme = readme;
     }
+
+    public void updateProfile(String name, String readme, String userId){
+        this.name = name;
+        this.readme = readme;
+        this.userId = userId;
+    }
 }
