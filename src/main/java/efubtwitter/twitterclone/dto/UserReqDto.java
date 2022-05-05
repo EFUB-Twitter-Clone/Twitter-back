@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class UserReqDto {
     @NotBlank
-    private Long id;
+    private Long userNumber;
     @NotBlank
     private String name;
     private String readme;
@@ -16,8 +16,8 @@ public class UserReqDto {
     private String userId;
 
     @Builder
-    public UserReqDto(Long id, String name, String readme, String userId){
-        this.id = id;
+    public UserReqDto(Long userNumber, String name, String readme, String userId){
+        this.userNumber = userNumber;
         this.name = name;
         this.readme = readme;
         this.userId = userId;
