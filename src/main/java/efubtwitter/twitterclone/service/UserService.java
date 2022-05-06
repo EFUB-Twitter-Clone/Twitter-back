@@ -3,6 +3,7 @@ package efubtwitter.twitterclone.service;
 import efubtwitter.twitterclone.domain.entity.User;
 import efubtwitter.twitterclone.domain.repository.UserRepository;
 import efubtwitter.twitterclone.dto.UserReqDto;
+import efubtwitter.twitterclone.dto.UserResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,16 @@ public class UserService {
             return true;
         }
         return false;       //중복 id가 있는 경우
+    }
+
+    public UserResDto getUser(Long userNumber){
+        User user = userRepository.findById(userNumber).orElseThrow(RuntimeException::new);
+        return UserResDto.builder()
+                .name(user.getName())
+                .readme(user.getReadme())
+                .userId(user.getUserId())
+                .userNumber(userNumber)
+                .build();
     }
 
     private boolean findDuplicatedId(String userId){
