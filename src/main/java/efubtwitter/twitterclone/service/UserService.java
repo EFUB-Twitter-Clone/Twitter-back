@@ -7,6 +7,7 @@ import efubtwitter.twitterclone.dto.UserResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -14,10 +15,12 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Transactional
     public void saveUser(UserReqDto userDto){
         userRepository.save(userDto.toEntity(userDto));
     }
 
+    @Transactional
     public boolean update(UserReqDto userDto, Long userNumber){
         if (!findDuplicatedId(userDto.getUserId(), userNumber)){        //중복 id가 없는 경우
             Optional<User> optionalUser = userRepository.findById(userNumber);
@@ -33,6 +36,7 @@ public class UserService {
         return false;       //중복 id가 있는 경우
     }
 
+    @Transactional
     public UserResDto getUser(Long userNumber){
         User user = userRepository.findById(userNumber).orElseThrow(RuntimeException::new);
         return UserResDto.builder()
