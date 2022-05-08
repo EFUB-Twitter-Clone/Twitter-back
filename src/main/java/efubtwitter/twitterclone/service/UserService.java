@@ -14,13 +14,20 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    public void saveUser(UserReqDto userDto){
+        userRepository.save(userDto.toEntity(userDto));
+    }
+
     public boolean update(UserReqDto userDto, Long userNumber){
-        if (!findDuplicatedId(userDto.getUserId())){        //중복 id가 없는 경우
+        if (!findDuplicatedId(userDto.getUserId(), userNumber)){        //중복 id가 없는 경우
             Optional<User> optionalUser = userRepository.findById(userNumber);
-            optionalUser.ifPresent(user -> user.updateProfile(
+            optionalUser.ifPresent(user -> {user.updateProfile(
                     userDto.getName(),
                     userDto.getReadme(),
-                    userDto.getUserId()));
+                    userDto.getUserId());
+                userRepository.save(user);
+            }
+            );
             return true;
         }
         return false;       //중복 id가 있는 경우
@@ -36,7 +43,8 @@ public class UserService {
                 .build();
     }
 
-    private boolean findDuplicatedId(String userId){
-        return userRepository.findByUserId(userId).isPresent();
+    private boolean findDuplicatedId(String userId, Long userNumber){
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        return userOptional.filter(user -> !user.getUserNumber().equals(userNumber)).isPresent();
     }
 }
