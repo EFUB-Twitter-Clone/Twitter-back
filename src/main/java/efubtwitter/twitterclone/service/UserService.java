@@ -7,6 +7,7 @@ import efubtwitter.twitterclone.dto.UserResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -14,18 +15,28 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Transactional
+    public void saveUser(UserReqDto userDto){
+        userRepository.save(userDto.toEntity(userDto));
+    }
+
+    @Transactional
     public boolean update(UserReqDto userDto, Long userNumber){
-        if (!findDuplicatedId(userDto.getUserId())){        //중복 id가 없는 경우
+        if (!findDuplicatedId(userDto.getUserId(), userNumber)){        //중복 id가 없는 경우
             Optional<User> optionalUser = userRepository.findById(userNumber);
-            optionalUser.ifPresent(user -> user.updateProfile(
+            optionalUser.ifPresent(user -> {user.updateProfile(
                     userDto.getName(),
                     userDto.getReadme(),
-                    userDto.getUserId()));
+                    userDto.getUserId());
+                userRepository.save(user);
+            }
+            );
             return true;
         }
         return false;       //중복 id가 있는 경우
     }
 
+    @Transactional
     public UserResDto getUser(Long userNumber){
         User user = userRepository.findById(userNumber).orElseThrow(RuntimeException::new);
         return UserResDto.builder()
@@ -36,7 +47,8 @@ public class UserService {
                 .build();
     }
 
-    private boolean findDuplicatedId(String userId){
-        return userRepository.findByUserId(userId).isPresent();
+    private boolean findDuplicatedId(String userId, Long userNumber){
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        return userOptional.filter(user -> !user.getUserNumber().equals(userNumber)).isPresent();
     }
 }

@@ -1,5 +1,6 @@
 package efubtwitter.twitterclone.dto;
 
+import efubtwitter.twitterclone.domain.entity.User;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -18,5 +19,13 @@ public class UserReqDto {
         this.name = name;
         this.readme = readme;
         this.userId = userId;
+    }
+
+    public User toEntity(UserReqDto user){
+        return User.builder()
+                .name(user.getName())
+                .userId(user.getUserId())
+                .readme(user.getReadme())
+                .build();
     }
 }

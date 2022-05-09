@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
+    @PostMapping("")
+    ResponseEntity<?> postUser(@RequestBody UserReqDto userDto){
+        userService.saveUser(userDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @PostMapping("/{userNumber}")
     ResponseEntity<?> updateUser(@PathVariable("userNumber") Long userNumber, @RequestBody UserReqDto userDto){
         if(userService.update(userDto, userNumber))
