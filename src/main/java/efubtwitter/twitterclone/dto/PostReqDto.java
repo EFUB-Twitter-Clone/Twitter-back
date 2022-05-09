@@ -16,16 +16,14 @@ public class PostReqDto {
     private String contents;
 
     @Builder
-    public PostReqDto(Post post){
-        userNumber = new UserResDto().getUserNumber();
-        postAt = post.getPostAt();
-        contents = post.getContents();
+    public PostReqDto(Long userNumber,  String contents){
+        this.userNumber = userNumber;
+        this.contents = contents;
     }
 
     public Post toEntity(UserRepository userRepository) {
         return Post.builder()
-                .user(userRepository.findById(userNumber).orElseThrow(RuntimeException::new))
-                .postAt(postAt)
+                .userNumber(userNumber)
                 .contents(contents)
                 .build();
     }

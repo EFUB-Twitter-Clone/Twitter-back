@@ -13,27 +13,28 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postNumber;
 
-    @ManyToOne
     @JoinColumn(name = "userNumber", nullable = false)
-    private User user;
+    //private User user;
+    private Long userNumber;
 
     @Column(length = 280, nullable = false)
     private String contents;
 
+    @Column(nullable = false)
     private LocalDateTime postAt;
 
     @PrePersist
-    public void postAt(){
+    public void createDate(){
         this.postAt = LocalDateTime.now();
     }
 
 
     @Builder
-    public Post(User user, LocalDateTime postAt, String contents){
-        this.user = user;
+    public Post(Long userNumber, LocalDateTime postAt, String contents){
+        this.userNumber = userNumber;
         this.postAt = postAt;
         this.contents = contents;
     }

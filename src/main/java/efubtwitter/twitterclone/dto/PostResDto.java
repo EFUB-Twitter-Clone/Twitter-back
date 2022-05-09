@@ -1,6 +1,7 @@
 package efubtwitter.twitterclone.dto;
 
 import efubtwitter.twitterclone.domain.entity.Post;
+import efubtwitter.twitterclone.domain.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +19,9 @@ public class PostResDto {
 
     public PostResDto(Post post){
         this.postNumber = post.getPostNumber();
-        this.userNumber = post.getUser().getUserNumber();
+        this.userNumber = post.getUserNumber();
         this.postAt = post.getPostAt();
         this.contents = post.getContents();
-
     }
 
 
